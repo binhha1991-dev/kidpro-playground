@@ -2,9 +2,14 @@ import { Sparkles, Zap } from 'lucide-react';
 import CategoryCard from '../components/CategoryCard';
 import GameCard from '../components/GameCard';
 import { usePlayer } from '../context/PlayerContext';
+import { getDifficulty } from '../difficulty';
 import { games, type GameCategory, type GameId } from '../gameRegistry';
+import { t, type Lang } from '../i18n';
+import type { ProgressStore } from '../rewards';
 
 interface DashboardProps {
+  lang: Lang;
+  progress: ProgressStore;
   onNavigate: (game: GameId) => void;
 }
 
@@ -50,11 +55,10 @@ function formatActiveGamesBadge(activeCount: number): string {
   return activeCount === 1 ? '1 Game' : `${activeCount} Games`;
 }
 
-export default function Dashboard({ onNavigate }: DashboardProps) {
+export default function Dashboard({ lang, progress, onNavigate }: DashboardProps) {
   const { age } = usePlayer();
-
-  const difficultyLabel =
-    age <= 6 ? 'Starter' : age <= 10 ? 'Explorer' : age <= 13 ? 'Champion' : 'Master';
+  const difficulty = getDifficulty(age);
+  const difficultyLabel = t(lang, difficulty);
 
   return (
     <main className="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
@@ -63,7 +67,8 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         <div className="inline-flex items-center gap-2 bg-sky-50 border border-sky-200 rounded-full px-4 py-1.5 mb-5">
           <Zap className="w-3.5 h-3.5 text-sky-500" />
           <span className="text-sm font-semibold text-sky-600">
-            Difficulty: <span className="font-black">{difficultyLabel}</span> Mode (Age {age})
+            {t(lang, 'difficulty')}: <span className="font-black">{difficultyLabel}</span> ({t(lang, 'age')}{' '}
+            {age})
           </span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-black text-slate-800 leading-tight">
@@ -103,6 +108,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               {categoryGames.map((game) => {
                 const isReady = game.status === 'ready';
                 const isWip = game.status === 'wip';
+                const bestStars = progress[game.id]?.bestStars ?? 0;
 
                 return (
                   <div key={game.id} className={isWip ? 'opacity-50' : ''}>
@@ -110,6 +116,8 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                       title={game.title}
                       description={isWip ? `${game.description} (Coming Soon)` : game.description}
                       active={isReady}
+                      stars={bestStars}
+                      playLabel={t(lang, 'play')}
                       onClick={isReady ? () => onNavigate(game.id) : undefined}
                     />
                   </div>

@@ -1,8 +1,20 @@
 import { Star, User, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { usePlayer } from '../context/PlayerContext';
+import { t, type Lang } from '../i18n';
 
-export default function Header() {
+interface HeaderProps {
+  lang: Lang;
+  setLang: (lang: Lang) => void;
+}
+
+const LANG_OPTIONS: { value: Lang; labelKey: 'english' | 'vietnamese' | 'bilingual' }[] = [
+  { value: 'en', labelKey: 'english' },
+  { value: 'vi', labelKey: 'vietnamese' },
+  { value: 'both', labelKey: 'bilingual' },
+];
+
+export default function Header({ lang, setLang }: HeaderProps) {
   const { age, setAge, totalStars, achievements } = usePlayer();
   const [showBadges, setShowBadges] = useState(false);
   const earned = achievements.filter((a) => a.earned);
@@ -15,7 +27,6 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
-
         {/* Logo */}
         <div className="flex items-center gap-2 flex-shrink-0">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 to-cyan-500 flex items-center justify-center shadow-md">
@@ -27,30 +38,60 @@ export default function Header() {
         </div>
 
         {/* Right cluster */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap justify-end">
+          {/* Language */}
+          <div
+            className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-full p-1"
+            role="group"
+            aria-label={t(lang, 'language')}
+          >
+            <span className="text-xs text-slate-500 px-2 hidden md:inline">
+              {t(lang, 'language')}
+            </span>
+            {LANG_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => setLang(option.value)}
+                className={`rounded-full px-2.5 py-1 text-xs font-bold transition-colors ${
+                  lang === option.value
+                    ? 'bg-sky-500 text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
+                aria-pressed={lang === option.value}
+              >
+                {t(lang, option.labelKey)}
+              </button>
+            ))}
+          </div>
 
           {/* Star score */}
           <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 rounded-full px-3 py-1.5">
             <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
             <span className="font-bold text-amber-700 text-sm tabular-nums">{totalStars}</span>
-            <span className="text-amber-500 text-xs hidden sm:inline">stars</span>
+            <span className="text-amber-500 text-xs hidden sm:inline">{t(lang, 'stars')}</span>
           </div>
 
           {/* Achievements badge area */}
           <div className="relative">
             <button
+              type="button"
               onClick={() => setShowBadges((v) => !v)}
               className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1.5 hover:bg-emerald-100 transition-colors"
             >
               <span className="text-sm">🏅</span>
               <span className="font-bold text-emerald-700 text-sm">{earned.length}</span>
-              <span className="text-emerald-500 text-xs hidden sm:inline">badges</span>
-              <ChevronDown className={`w-3.5 h-3.5 text-emerald-500 transition-transform ${showBadges ? 'rotate-180' : ''}`} />
+              <span className="text-emerald-500 text-xs hidden sm:inline">{t(lang, 'badges')}</span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 text-emerald-500 transition-transform ${showBadges ? 'rotate-180' : ''}`}
+              />
             </button>
 
             {showBadges && (
               <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 p-3 z-50">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">Achievements</p>
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">
+                  Achievements
+                </p>
                 <div className="space-y-1">
                   {achievements.map((a) => (
                     <div
@@ -60,10 +101,14 @@ export default function Header() {
                       }`}
                     >
                       <span className="text-lg">{a.icon}</span>
-                      <span className={`text-sm font-medium ${a.earned ? 'text-slate-700' : 'text-slate-400'}`}>
+                      <span
+                        className={`text-sm font-medium ${a.earned ? 'text-slate-700' : 'text-slate-400'}`}
+                      >
                         {a.label}
                       </span>
-                      {a.earned && <span className="ml-auto text-amber-400 text-xs font-bold">Earned!</span>}
+                      {a.earned && (
+                        <span className="ml-auto text-amber-400 text-xs font-bold">Earned!</span>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -77,7 +122,7 @@ export default function Header() {
               <User className="w-3.5 h-3.5 text-white" />
             </div>
             <div className="flex items-center gap-1">
-              <span className="text-xs text-slate-500 hidden sm:inline">Age</span>
+              <span className="text-xs text-slate-500 hidden sm:inline">{t(lang, 'age')}</span>
               <input
                 type="number"
                 min={3}
@@ -85,7 +130,7 @@ export default function Header() {
                 value={age}
                 onChange={handleAgeChange}
                 className="w-10 text-sm font-bold text-slate-700 bg-transparent border-none outline-none text-center tabular-nums"
-                aria-label="Player age"
+                aria-label={t(lang, 'age')}
               />
             </div>
           </div>

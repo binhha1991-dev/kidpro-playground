@@ -4,11 +4,19 @@ interface GameCardProps {
   title: string;
   description: string;
   stars?: number;
+  playLabel?: string;
   active: boolean;
   onClick?: () => void;
 }
 
-export default function GameCard({ title, description, stars = 0, active, onClick }: GameCardProps) {
+export default function GameCard({
+  title,
+  description,
+  stars = 0,
+  playLabel = 'Play Now',
+  active,
+  onClick,
+}: GameCardProps) {
   if (active) {
     return (
       <button
@@ -18,7 +26,7 @@ export default function GameCard({ title, description, stars = 0, active, onClic
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1">
             <span className="inline-block text-xs font-bold text-sky-600 bg-sky-50 rounded-full px-2 py-0.5 mb-2">
-              Play Now
+              {playLabel}
             </span>
             <h4 className="font-bold text-slate-800 text-sm leading-tight">{title}</h4>
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">{description}</p>

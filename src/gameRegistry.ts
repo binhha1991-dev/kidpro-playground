@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import type { GameProps } from './gameProps';
 
 import DinoAuditor from './games/DinoAuditor';
 import WordHunter from './games/WordHunter';
@@ -23,10 +24,7 @@ export type GameId = string;
 
 type LegacyViewComponent = ComponentType<{ onBack: () => void }>;
 
-type StandaloneGameComponent = ComponentType<{
-  userAge: number;
-  onGameComplete: (stars: number) => void;
-}>;
+type StandaloneGameComponent = ComponentType<GameProps>;
 
 
 export type GameRegistryItem = {
