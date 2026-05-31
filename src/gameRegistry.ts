@@ -15,6 +15,8 @@ import CyberFirewallPro from './games/CyberFirewallPro';
 import SpellingGarden from './games/SpellingGarden';
 import MagicMathBalance from './games/MagicMathBalance';
 import MemorySequence from './games/MemorySequence';
+import EcoGenesisLab from './games/EcoGenesisLab';
+import MonsterTileQuest from './games/MonsterTileQuest';
 
 export type GameCategory = 'Logic & Memory' | 'Words & Language' | 'Numbers & Shapes';
 
@@ -25,7 +27,6 @@ export type GameId = string;
 type LegacyViewComponent = ComponentType<{ onBack: () => void }>;
 
 type StandaloneGameComponent = ComponentType<GameProps>;
-
 
 export type GameRegistryItem = {
   id: GameId;
@@ -46,7 +47,7 @@ export const games: GameRegistryItem[] = [
     description: 'Build and decode numbers with binary light switches.',
     category: 'Numbers & Shapes',
     icon: '💡',
-    status: 'ready',
+    status: 'wip',
     component: BinaryPowerLab,
   },
   {
@@ -73,7 +74,7 @@ export const games: GameRegistryItem[] = [
     description: 'Let safe data pass and block viruses with a moving firewall gate.',
     category: 'Logic & Memory',
     icon: '🛡️',
-    status: 'ready',
+    status: 'wip',
     component: CyberFirewallPro,
   },
   {
@@ -136,6 +137,24 @@ export const games: GameRegistryItem[] = [
     notes: 'Strong concept, needs tutorial/progression polish.',
   },
   {
+    id: 'eco-genesis-lab',
+    title: 'Eco Genesis Lab',
+    description: 'Combine water, earth, sun, and air to discover nature and grow a tree.',
+    category: 'Logic & Memory',
+    icon: '🌳',
+    status: 'ready',
+    component: EcoGenesisLab,
+  },
+  {
+    id: 'monster-tile-quest',
+    title: 'Monster Tile Quest',
+    description: 'Slide tiles to rebuild the monster picture puzzle.',
+    category: 'Logic & Memory',
+    icon: '🧩',
+    status: 'ready',
+    component: MonsterTileQuest,
+  },
+  {
     id: 'memory-sequence',
     title: 'Memory Sequence',
     description: 'Watch the pattern light up, then repeat it back.',
@@ -169,7 +188,7 @@ export const games: GameRegistryItem[] = [
     description: 'Which rope is longest or shortest?',
     category: 'Logic & Memory',
     icon: '🧵',
-    status: 'hidden',
+    status: 'wip',
     component: TangleLengthGame,
     notes: 'Replayability is currently low; keep for future redesign.',
   },
